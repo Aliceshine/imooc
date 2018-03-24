@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -49,50 +50,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<tr>
 								    <th><input type="checkbox" id="all" onclick=""/></th>
 								    <th>序号</th>
-								    <th>演示字段1</th>
-								    <th>演示字段2</th>
+								    <th>指令名称</th>
+								    <th>描述</th>
 								    <th>操作</th>
 								</tr>
-								<tr>
-									<td><input type="checkbox" /></td>
-									<td>1</td>
-									<td>演示值1</td>
-									<td>演示值2</td>
-									<td>
-										<a href="#">修改</a>&nbsp;&nbsp;&nbsp;
-										<a href="#">删除</a>
-									</td>
-								</tr>
-								<tr style="background-color:#ECF6EE;">
-									<td><input type="checkbox" /></td>
-									<td>2</td>
-									<td>演示值1</td>
-									<td>演示值2</td>
-									<td>
-										<a href="#">修改</a>&nbsp;&nbsp;&nbsp;
-										<a href="#">删除</a>
-									</td>
-								</tr>
-								<tr>
-									<td><input type="checkbox" /></td>
-									<td>3</td>
-									<td>演示值1</td>
-									<td>演示值2</td>
-									<td>
-										<a href="#">修改</a>&nbsp;&nbsp;&nbsp;
-										<a href="#">删除</a>
-									</td>
-								</tr>
-								<tr style="background-color:#ECF6EE;">
-									<td><input type="checkbox" /></td>
-									<td>4</td>
-									<td>演示值1</td>
-									<td>演示值2</td>
-									<td>
-										<a href="#">修改</a>&nbsp;&nbsp;&nbsp;
-										<a href="#">删除</a>
-									</td>
-								</tr>
+								<c:forEach items="${messageList}" var="message" varStatus="status">
+									<!--奇偶行样式不同-->
+									<tr <c:if test="${status.index%2!=0}">style="background-color:#ECF6EE;"</c:if>>
+										<td><input type="checkbox" /></td>
+										<td>${status.index+1}</td>
+										<td>${message.command}</td>
+										<td>${message.description}</td>
+										<td>
+											<a href="#">修改</a>&nbsp;&nbsp;&nbsp;
+											<a href="#">删除</a>
+										</td>
+									</tr>
+								</c:forEach>
 							</tbody>
 						</table>
 						<div class='page fix'>
