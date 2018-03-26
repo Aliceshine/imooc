@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.imooc.bean.Message;
-import com.mysql.jdbc.PreparedStatement;
+import com.imooc.service.ListService;
 
 /**
  * 列表页面初始化控制
@@ -28,30 +27,22 @@ public class ListServlet extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		//连接数据库
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection conn= DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/micro_message","root","123456");
-			String sql="select ID,COMMAND,DESCRIPTION,CONTENT from message";
-			Statement statement =  conn.prepareStatement(sql);
-			ResultSet rs=statement.executeQuery(sql);
-			List<Message> messageList=new ArrayList<Message>();
-			while(rs.next()){
-				Message message=new Message();
-				messageList.add(message);
-				message.setId(rs.getString("ID"));
-				message.setCommand(rs.getString("COMMAND"));
-				message.setDescription(rs.getString("DESCRIPTION"));
-				message.setContent(rs.getString("CONTENT"));
-			}
-			req.setAttribute("messageList", messageList);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		//设置编码
+		req.setCharacterEncoding("utf-8");
+		
+		//接受页面的值
+		String command=req.getParameter("command");
+		String description=req.getParameter("description");
+		
+		//向页面传值
+		req.setAttribute("command",command);
+		req.setAttribute("description",description);
+		
+		ListService listService=new ListService();
+		//查询消息列表并传给页面
+		req.setAttribute("messageList", listService.queryMessageList(command, description));
+		//跳转
 		req.getRequestDispatcher("/WEB-INF/jsp/back/list.jsp").forward(req, resp);
 	}
 	
